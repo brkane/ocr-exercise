@@ -29,16 +29,14 @@ describe Ocr::AccountNumber do
   end
 
   context "invalid checksum" do
+    let(:data) { fixture('ocr/invalid_account_number_chksum.txt') }
+    subject(:account) { Ocr::AccountNumber.new data }
 
     it "does not pass a checksum verification" do
-      data = fixture('ocr/invalid_account_number_chksum.txt')
-      account = Ocr::AccountNumber.new data
       expect(account.valid?).to be false
     end
 
     it "outputs invalid checksum flag" do
-      data = fixture('ocr/invalid_account_number_chksum.txt')
-      account = Ocr::AccountNumber.new data
       expect(account.to_s).to eq('888888888 ERR')
     end
   end
