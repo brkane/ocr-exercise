@@ -25,6 +25,7 @@ module Ocr
     def initialize(number_string)
 
       lines = validate_string number_string
+      @invalid_characters = false
 
       row1_matches = []
       row2_matches = []
@@ -49,15 +50,29 @@ module Ocr
             break
           end
         end
+        if match == -1
+          match = '?'
+          @invalid_characters = true
+        end
         match.to_s
       end.join
     end
 
     def to_s
-      @number.to_s
+      if @invalid_characters
+        @number.to_s + " ILL"
+      elsif valid_checksum?
+        @number.to_s
+      else
+        @number.to_s + " ERR"
+      end
     end
 
     def valid?
+      valid_checksum? && !@invalid_characters
+    end
+
+    def valid_checksum?
       checksum = 0
       @number.chars.reverse.each_with_index do |char, i|
         checksum += char.to_i * (i + 1)

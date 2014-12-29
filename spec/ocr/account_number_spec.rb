@@ -5,7 +5,7 @@ require 'ocr'
 
 describe Ocr::AccountNumber do
 
-  context "invalid number" do
+  context "invalid input" do
     it "throws an argument error if input string does not have four lines" do
       data = "1\n2\n3"
       expect {Ocr::AccountNumber.new data}.to raise_error
@@ -26,10 +26,29 @@ describe Ocr::AccountNumber do
       expect {Ocr::AccountNumber.new data}.to raise_error
     end
 
+  end
+
+  context "invalid checksum" do
+
     it "does not pass a checksum verification" do
       data = fixture('ocr/invalid_account_number_chksum.txt')
       account = Ocr::AccountNumber.new data
       expect(account.valid?).to be false
+    end
+
+    it "outputs invalid checksum flag" do
+      data = fixture('ocr/invalid_account_number_chksum.txt')
+      account = Ocr::AccountNumber.new data
+      expect(account.to_s).to eq('888888888 ERR')
+    end
+  end
+
+  context "illegal characters" do
+
+    it "outputs illegal character flag" do
+      data = fixture('ocr/invalid_account_number_illegal.txt')
+      account = Ocr::AccountNumber.new data
+      expect(account.to_s).to eq('1234?678? ILL')
     end
   end
 
