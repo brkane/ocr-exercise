@@ -26,4 +26,12 @@ describe Ocr::AccountNumber do
       expect {Ocr::AccountNumber.new data}.to raise_error
     end
   end
+
+  context "valid number" do
+    it "outputs the number in string form" do
+      data = fixture('ocr/valid_account_number.txt')
+      account = Ocr::AccountNumber.new data
+      expect(account.to_s).to eq('000000000')
+    end
+  end
 end
