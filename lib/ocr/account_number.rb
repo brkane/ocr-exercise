@@ -57,6 +57,14 @@ module Ocr
       @number.to_s
     end
 
+    def valid?
+      checksum = 0
+      @number.chars.reverse.each_with_index do |char, i|
+        checksum += char.to_i * (i + 1)
+      end
+      checksum % 11 == 0
+    end
+
     private
 
     def lookup_digit(string, table)

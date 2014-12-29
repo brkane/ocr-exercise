@@ -25,6 +25,12 @@ describe Ocr::AccountNumber do
       data = fixture('ocr/invalid_account_number_4.txt')
       expect {Ocr::AccountNumber.new data}.to raise_error
     end
+
+    it "does not pass a checksum verification" do
+      data = fixture('ocr/invalid_account_number_chksum.txt')
+      account = Ocr::AccountNumber.new data
+      expect(account.valid?).to be false
+    end
   end
 
   context "valid number" do
